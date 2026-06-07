@@ -3,40 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Dopamine Cart V2</title>
+    <title>Secure Checkout</title>
     <style>
         :root {
-            --bg-color: #f4f7f6;
-            --box-bg: white;
-            --text-main: #333;
-            --text-sub: #7f8c8d;
-            --accent: #3498db;
-            --button-bg: #000;
-            --button-text: white;
-            --success: #27ae60;
-        }
-
-        /* THEME CLASSES */
-        body.theme-retail {
-            --bg-color: #eaeded;
-            --box-bg: white;
-            --text-main: #0f1111;
-            --accent: #f0c14b;
-            --button-bg: #ffd814;
-            --button-text: #0f1111;
-        }
-        body.theme-beauty {
-            --bg-color: #000;
-            --box-bg: #fff;
-            --text-main: #000;
-            --accent: #e74c3c;
-            --button-bg: #000;
-            --button-text: #fff;
-            --text-sub: #999;
+            /* Nykaa-inspired color palette */
+            --bg-color: #f3f3f3;
+            --box-bg: #ffffff;
+            --text-main: #3f414d;
+            --text-sub: #8c8d94;
+            --accent-pink: #fc2779;
+            --accent-hover: #e01b67;
+            --border-color: #e2e2e2;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             display: flex;
@@ -44,231 +25,255 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            transition: background-color 0.3s;
-        }
-        .container {
-            background: var(--box-bg);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        h1 { margin-top: 0; }
-        
-        .theme-selector {
-            margin-bottom: 20px;
-            text-align: right;
-        }
-        select {
-            padding: 5px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
         }
 
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            font-size: 0.9em;
-            color: var(--text-sub);
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ecf0f1;
+        .checkout-container {
+            background: var(--box-bg);
+            padding: 30px;
             border-radius: 8px;
-            font-size: 1em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            max-width: 420px;
+            width: 100%;
             box-sizing: border-box;
         }
-        input[type="text"]:focus {
-            border-color: var(--accent);
-            outline: none;
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
         }
-        
-        .brand-badge {
-            display: none;
-            background: var(--accent);
-            color: var(--button-text);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            font-weight: bold;
-            margin-bottom: 15px;
+
+        .header h1 {
+            font-size: 1.4em;
+            margin: 0;
+            color: var(--text-main);
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .price-tag {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: var(--success);
-            margin: 20px 0;
-            display: none;
+        .input-group {
+            margin-bottom: 20px;
         }
-        button {
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            border: 1px solid rgba(0,0,0,0.1);
-            padding: 15px 20px;
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.85em;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"] {
             width: 100%;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s, opacity 0.3s;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.95em;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
         }
-        button:hover { opacity: 0.9; }
-        button:active { transform: scale(0.98); }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-pink);
+            outline: none;
+        }
+
+        .product-preview {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: #fafafa;
+        }
+
+        .product-preview img {
+            max-width: 120px;
+            max-height: 120px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            width: 100%;
+            border-radius: 4px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
 
         .spinner {
             display: none;
             margin: 20px auto;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--accent);
+            border: 3px solid rgba(252, 39, 121, 0.2);
+            border-top: 3px solid var(--accent-pink);
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 24px;
+            height: 24px;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .success-message { display: none; }
-        .success-message h2 { color: var(--success); }
-        .receipt {
-            background: #f8f9fa;
-            border: 1px dashed #bdc3c7;
-            padding: 15px;
-            border-radius: 8px;
+        .success-state {
+            display: none;
+            text-align: center;
+        }
+
+        .icon-check {
+            color: #4caf50;
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .receipt-box {
+            background: #f9f9f9;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 4px;
             margin-top: 20px;
             text-align: left;
-            font-family: monospace;
-            color: #333;
+            font-size: 0.9em;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="checkout-box">
+    <div class="checkout-container">
         
-        <div class="theme-selector">
-            <select id="theme-drop" onchange="changeTheme()">
-                <option value="default">Vibe: Minimalist</option>
-                <option value="theme-retail">Vibe: Big Box Store</option>
-                <option value="theme-beauty">Vibe: High-End Beauty</option>
-            </select>
-        </div>
-
-        <h1>🛒 Secure Checkout</h1>
-        <div class="brand-badge" id="brand-badge"></div>
-        
-        <div class="input-group">
-            <label for="item">Paste a product link, or type what you want:</label>
-            <input type="text" id="item" placeholder="https://www.example.com/product..." oninput="processInput()">
-        </div>
-
-        <div class="price-tag" id="price-display"></div>
-
-        <button id="buy-btn" onclick="startCheckout()">Place Order</button>
-        <div class="spinner" id="spinner"></div>
-
-        <div class="success-message" id="success">
-            <h2>🎉 Order Confirmed</h2>
-            <p>Your dopamine has been successfully deposited.</p>
-            <div class="receipt">
-                <strong>🧾 VIRTUAL RECEIPT</strong><br><br>
-                Brand/Site: <span id="receipt-brand">N/A</span><br>
-                Cost: <span id="receipt-cost"></span><br>
-                Actual Money Spent: $0.00<br>
-                <strong>Money Saved: <span id="receipt-saved"></span></strong>
+        <div id="checkout-form">
+            <div class="header">
+                <h1>Bag</h1>
             </div>
-            <button style="margin-top: 20px; background-color: #bdc3c7; color: #333;" onclick="resetCart()">Go Again</button>
+
+            <div class="input-group">
+                <label for="img-url">Paste Image Address</label>
+                <input type="text" id="img-url" placeholder="Right-click image -> Copy Image Address" oninput="loadPreview()">
+            </div>
+
+            <div class="product-preview" id="product-preview">
+                <img id="preview-img" src="" alt="Product">
+                <div id="item-name" style="font-size: 0.9em; color: var(--text-main);">Premium Product</div>
+            </div>
+
+            <div class="price-row" id="price-row" style="display: none;">
+                <span>Grand Total</span>
+                <span id="price-display">₹0</span>
+            </div>
+
+            <button class="btn-primary" id="pay-btn" onclick="processPayment()">Proceed To Pay</button>
+            <div class="spinner" id="spinner"></div>
         </div>
+
+        <div class="success-state" id="success-state">
+            <div class="icon-check">✓</div>
+            <h2 style="margin: 10px 0;">Order Placed!</h2>
+            <p style="color: var(--text-sub); font-size: 0.9em;">Your order has been successfully confirmed.</p>
+            
+            <div class="receipt-box">
+                <strong>Order ID:</strong> <span id="order-id"></span><br>
+                <strong>Date:</strong> <span id="order-date"></span><br>
+                <strong>Payment Method:</strong> Prepaid<br>
+                <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 15px 0;">
+                <div style="display: flex; justify-content: space-between; font-weight: 600;">
+                    <span>Total Amount Paid:</span>
+                    <span id="receipt-total"></span>
+                </div>
+            </div>
+
+            <button class="btn-primary" style="margin-top: 25px; background-color: var(--text-main);" onclick="resetForm()">Continue Shopping</button>
+        </div>
+
     </div>
 
     <script>
-        let currentFakePrice = "$0.00";
-        let detectedBrand = "Custom Entry";
+        let currentTotal = "₹0";
 
-        function changeTheme() {
-            const theme = document.getElementById('theme-drop').value;
-            document.body.className = '';
-            if (theme !== 'default') {
-                document.body.classList.add(theme);
-            }
-        }
-
-        function processInput() {
-            const input = document.getElementById('item').value;
+        function loadPreview() {
+            const imgUrl = document.getElementById('img-url').value;
+            const previewBox = document.getElementById('product-preview');
+            const previewImg = document.getElementById('preview-img');
+            const priceRow = document.getElementById('price-row');
             const priceDisplay = document.getElementById('price-display');
-            const brandBadge = document.getElementById('brand-badge');
-            
-            // Check if it's a URL
-            if (input.startsWith('http://') || input.startsWith('https://')) {
-                try {
-                    const url = new URL(input);
-                    // Extract domain name (e.g., www.sephora.com -> sephora)
-                    let domainParts = url.hostname.split('.');
-                    let brandName = domainParts.length > 2 ? domainParts[1] : domainParts[0];
-                    
-                    detectedBrand = brandName.charAt(0).toUpperCase() + brandName.slice(1);
-                    brandBadge.innerText = "Simulating: " + detectedBrand;
-                    brandBadge.style.display = 'inline-block';
-                } catch (e) {
-                    brandBadge.style.display = 'none';
-                    detectedBrand = "Custom Entry";
-                }
-            } else {
-                brandBadge.style.display = 'none';
-                detectedBrand = "Custom Entry";
-            }
 
-            if (input.length > 3) {
-                const randomPrice = (Math.random() * (250 - 15) + 15).toFixed(2);
-                currentFakePrice = `$${randomPrice}`;
-                priceDisplay.innerText = `Total: ${currentFakePrice}`;
-                priceDisplay.style.display = 'block';
+            if (imgUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i) || imgUrl.includes('images')) {
+                previewImg.src = imgUrl;
+                previewBox.style.display = 'block';
+                
+                // Generate realistic INR price between 500 and 4500
+                const randomPrice = Math.floor(Math.random() * (4500 - 500 + 1)) + 500;
+                currentTotal = `₹${randomPrice.toLocaleString('en-IN')}`;
+                
+                priceDisplay.innerText = currentTotal;
+                priceRow.style.display = 'flex';
             } else {
-                priceDisplay.style.display = 'none';
+                previewBox.style.display = 'none';
+                priceRow.style.display = 'none';
             }
         }
 
-        function startCheckout() {
-            const item = document.getElementById('item').value;
-            if (!item) return;
+        function processPayment() {
+            const imgUrl = document.getElementById('img-url').value;
+            if (!imgUrl) return;
 
-            document.querySelector('.input-group').style.display = 'none';
-            document.getElementById('price-display').style.display = 'none';
-            document.getElementById('buy-btn').style.display = 'none';
-            document.querySelector('.theme-selector').style.display = 'none';
-            document.getElementById('brand-badge').style.display = 'none';
+            document.getElementById('pay-btn').style.display = 'none';
             document.getElementById('spinner').style.display = 'block';
 
+            // Simulate payment processing time
             setTimeout(() => {
-                document.getElementById('spinner').style.display = 'none';
-                document.getElementById('receipt-brand').innerText = detectedBrand;
-                document.getElementById('receipt-cost').innerText = currentFakePrice;
-                document.getElementById('receipt-saved').innerText = currentFakePrice;
-                document.getElementById('success').style.display = 'block';
-            }, 1800); 
+                document.getElementById('checkout-form').style.display = 'none';
+                
+                // Generate random Order ID
+                const orderId = 'NYK-' + Math.floor(10000000 + Math.random() * 90000000);
+                
+                // Get current date formatted
+                const today = new Date();
+                const dateString = today.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+                document.getElementById('order-id').innerText = orderId;
+                document.getElementById('order-date').innerText = dateString;
+                document.getElementById('receipt-total').innerText = currentTotal;
+                
+                document.getElementById('success-state').style.display = 'block';
+            }, 2000); 
         }
 
-        function resetCart() {
-            document.getElementById('success').style.display = 'none';
-            document.querySelector('.input-group').style.display = 'block';
-            document.getElementById('buy-btn').style.display = 'block';
-            document.querySelector('.theme-selector').style.display = 'block';
-            document.getElementById('item').value = '';
-            document.getElementById('price-display').style.display = 'none';
-            document.getElementById('brand-badge').style.display = 'none';
-            currentFakePrice = "$0.00";
-            detectedBrand = "Custom Entry";
+        function resetForm() {
+            document.getElementById('success-state').style.display = 'none';
+            document.getElementById('checkout-form').style.display = 'block';
+            document.getElementById('pay-btn').style.display = 'block';
+            document.getElementById('spinner').style.display = 'none';
+            
+            document.getElementById('img-url').value = '';
+            document.getElementById('product-preview').style.display = 'none';
+            document.getElementById('price-row').style.display = 'none';
+            currentTotal = "₹0";
         }
     </script>
 </body>
