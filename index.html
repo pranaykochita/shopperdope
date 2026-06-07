@@ -6,274 +6,371 @@
     <title>Secure Checkout</title>
     <style>
         :root {
-            /* Nykaa-inspired color palette */
-            --bg-color: #f3f3f3;
-            --box-bg: #ffffff;
-            --text-main: #3f414d;
-            --text-sub: #8c8d94;
-            --accent-pink: #fc2779;
-            --accent-hover: #e01b67;
-            --border-color: #e2e2e2;
+            --bg-main: #ffffff;
+            --bg-sidebar: #fafafa;
+            --border-color: #e6e6e6;
+            --text-primary: #333333;
+            --text-secondary: #737373;
+            --accent: #000000;
+            --accent-hover: #333333;
+            --error: #e22120;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+            background-color: var(--bg-main);
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
         }
 
+        /* Layout */
         .checkout-container {
-            background: var(--box-bg);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            max-width: 420px;
+            display: flex;
             width: 100%;
-            box-sizing: border-box;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
+        .main-col {
+            flex: 1.2;
+            padding: 5% 5% 5% 2%;
         }
 
-        .header h1 {
-            font-size: 1.4em;
-            margin: 0;
-            color: var(--text-main);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .sidebar-col {
+            flex: 1;
+            background-color: var(--bg-sidebar);
+            padding: 5% 2% 5% 5%;
+            border-left: 1px solid var(--border-color);
         }
 
-        .input-group {
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 500;
             margin-bottom: 20px;
+        }
+
+        /* Form Elements */
+        .section-block {
+            margin-bottom: 40px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background-color: #fff;
+            transition: border 0.2s;
+        }
+
+        input[readonly] {
+            background-color: #f9f9f9;
+            color: var(--text-secondary);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
         }
 
         label {
             display: block;
-            margin-bottom: 6px;
-            font-size: 0.85em;
-            color: var(--text-sub);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            margin-left: 2px;
         }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 0.95em;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--accent-pink);
-            outline: none;
-        }
-
-        .product-preview {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
+        /* Payment Box */
+        .payment-box {
+            border: 1px solid var(--accent);
+            border-radius: 5px;
             padding: 15px;
+            background-color: #fafbfc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-box input[type="radio"] {
+            accent-color: var(--accent);
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Sidebar Inputs & Summary */
+        .product-setup {
+            background: #fff;
+            padding: 20px;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .product-preview-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .product-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background: #fafafa;
-        }
-
-        .product-preview img {
-            max-width: 120px;
-            max-height: 120px;
             object-fit: contain;
-            margin-bottom: 10px;
+            background: #fff;
         }
 
-        .price-row {
+        .summary-row {
             display: flex;
             justify-content: space-between;
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-bottom: 20px;
-            padding-top: 15px;
-            border-top: 1px dashed var(--border-color);
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--text-secondary);
         }
 
-        .btn-primary {
-            background-color: var(--accent-pink);
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Button */
+        .btn-pay {
+            background-color: var(--accent);
             color: white;
             border: none;
-            padding: 14px 20px;
+            padding: 18px;
             width: 100%;
-            border-radius: 4px;
-            font-size: 1em;
-            font-weight: 600;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
             transition: background-color 0.2s;
+            margin-top: 20px;
         }
 
-        .btn-primary:hover {
+        .btn-pay:hover {
             background-color: var(--accent-hover);
         }
 
-        .spinner {
+        /* Processing State */
+        .processing-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.9);
             display: none;
-            margin: 20px auto;
-            border: 3px solid rgba(252, 39, 121, 0.2);
-            border-top: 3px solid var(--accent-pink);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent);
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
+            margin-bottom: 20px;
         }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .success-state {
-            display: none;
+        /* Success State */
+        .success-content {
             text-align: center;
+            display: none;
         }
 
-        .icon-check {
-            color: #4caf50;
-            font-size: 48px;
-            margin-bottom: 10px;
+        .success-content svg {
+            width: 60px;
+            height: 60px;
+            fill: #28a745;
+            margin-bottom: 15px;
         }
 
-        .receipt-box {
-            background: #f9f9f9;
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 4px;
-            margin-top: 20px;
-            text-align: left;
-            font-size: 0.9em;
-            line-height: 1.6;
+        @media (max-width: 800px) {
+            .checkout-container { flex-direction: column-reverse; }
+            .sidebar-col { border-left: none; border-bottom: 1px solid var(--border-color); padding: 5%; }
+            .main-col { padding: 5%; }
         }
     </style>
 </head>
 <body>
 
-    <div class="checkout-container">
+    <div class="checkout-container" id="checkout-view">
         
-        <div id="checkout-form">
-            <div class="header">
-                <h1>Bag</h1>
-            </div>
-
-            <div class="input-group">
-                <label for="img-url">Paste Image Address</label>
-                <input type="text" id="img-url" placeholder="Right-click image -> Copy Image Address" oninput="loadPreview()">
-            </div>
-
-            <div class="product-preview" id="product-preview">
-                <img id="preview-img" src="" alt="Product">
-                <div id="item-name" style="font-size: 0.9em; color: var(--text-main);">Premium Product</div>
-            </div>
-
-            <div class="price-row" id="price-row" style="display: none;">
-                <span>Grand Total</span>
-                <span id="price-display">₹0</span>
-            </div>
-
-            <button class="btn-primary" id="pay-btn" onclick="processPayment()">Proceed To Pay</button>
-            <div class="spinner" id="spinner"></div>
-        </div>
-
-        <div class="success-state" id="success-state">
-            <div class="icon-check">✓</div>
-            <h2 style="margin: 10px 0;">Order Placed!</h2>
-            <p style="color: var(--text-sub); font-size: 0.9em;">Your order has been successfully confirmed.</p>
+        <div class="main-col">
+            <h1 style="font-weight: 500; letter-spacing: -1px; margin-top: 0; margin-bottom: 40px;">Checkout</h1>
             
-            <div class="receipt-box">
-                <strong>Order ID:</strong> <span id="order-id"></span><br>
-                <strong>Date:</strong> <span id="order-date"></span><br>
-                <strong>Payment Method:</strong> Prepaid<br>
-                <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 15px 0;">
-                <div style="display: flex; justify-content: space-between; font-weight: 600;">
-                    <span>Total Amount Paid:</span>
-                    <span id="receipt-total"></span>
+            <div class="section-block">
+                <h2>Shipping address</h2>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Full Name</label>
+                    <input type="text" value="Pranay" readonly>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Address</label>
+                    <input type="text" value="Sri Yashoda Residency, Karkhana" readonly>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" value="Hyderabad" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <input type="text" value="Telangana" readonly>
+                    </div>
                 </div>
             </div>
 
-            <button class="btn-primary" style="margin-top: 25px; background-color: var(--text-main);" onclick="resetForm()">Continue Shopping</button>
+            <div class="section-block">
+                <h2>Payment</h2>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 15px;">All transactions are secure and encrypted.</p>
+                <div class="payment-box">
+                    <input type="radio" checked id="card-payment">
+                    <label for="card-payment" style="margin: 0; font-size: 14px; font-weight: 500; color: var(--text-primary);">
+                        Pranay's Credit Card
+                    </label>
+                    <span style="margin-left: auto; font-size: 14px; color: var(--text-secondary);">•••• 4242</span>
+                </div>
+            </div>
+
+            <button class="btn-pay" onclick="simulatePayment()">Pay Now</button>
+        </div>
+
+        <div class="sidebar-col">
+            
+            <div class="product-setup">
+                <label style="color: #000; font-weight: 500;">Load Item into Cart:</label>
+                <input type="text" id="img-url" placeholder="Paste Image Address URL..." style="margin-top: 8px; margin-bottom: 10px;" oninput="updatePreview()">
+                <input type="number" id="item-price" placeholder="Enter Exact Price (₹)" oninput="updatePreview()">
+            </div>
+
+            <div class="product-preview-container" id="preview-container">
+                <img src="" id="preview-img" class="product-img" alt="Product Image">
+                <div style="flex: 1;">
+                    <div style="font-weight: 500; font-size: 14px; margin-bottom: 5px;">Premium Selection</div>
+                    <div style="font-size: 13px; color: var(--text-secondary);">Qty: 1</div>
+                </div>
+                <div style="font-weight: 500;" id="line-price">₹0</div>
+            </div>
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal-display">₹0</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span>Free</span>
+            </div>
+            <div class="summary-total">
+                <span>Total</span>
+                <span style="font-size: 24px;">
+                    <span style="font-size: 14px; color: var(--text-secondary); font-weight: 400; margin-right: 5px;">INR</span> 
+                    <span id="total-display">₹0</span>
+                </span>
+            </div>
         </div>
 
     </div>
 
+    <div class="processing-overlay" id="overlay">
+        <div class="spinner" id="spinner"></div>
+        <div id="processing-text" style="font-weight: 500; color: var(--text-primary); margin-top: 10px;">Processing payment...</div>
+        
+        <div class="success-content" id="success">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <h2 style="margin: 0 0 10px 0;">Order confirmed</h2>
+            <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 30px;">Your order has been accepted. We'll send shipping updates shortly.</p>
+            <p style="font-size: 14px;"><strong>Order number:</strong> <span id="order-num"></span></p>
+            <button class="btn-pay" style="width: auto; padding: 12px 30px;" onclick="location.reload()">Continue Shopping</button>
+        </div>
+    </div>
+
     <script>
-        let currentTotal = "₹0";
-
-        function loadPreview() {
+        function updatePreview() {
             const imgUrl = document.getElementById('img-url').value;
-            const previewBox = document.getElementById('product-preview');
-            const previewImg = document.getElementById('preview-img');
-            const priceRow = document.getElementById('price-row');
-            const priceDisplay = document.getElementById('price-display');
-
-            if (imgUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i) || imgUrl.includes('images')) {
-                previewImg.src = imgUrl;
-                previewBox.style.display = 'block';
-                
-                // Generate realistic INR price between 500 and 4500
-                const randomPrice = Math.floor(Math.random() * (4500 - 500 + 1)) + 500;
-                currentTotal = `₹${randomPrice.toLocaleString('en-IN')}`;
-                
-                priceDisplay.innerText = currentTotal;
-                priceRow.style.display = 'flex';
+            const price = document.getElementById('item-price').value;
+            const container = document.getElementById('preview-container');
+            
+            // Handle Image
+            if (imgUrl.length > 5) {
+                document.getElementById('preview-img').src = imgUrl;
+                container.style.display = 'flex';
             } else {
-                previewBox.style.display = 'none';
-                priceRow.style.display = 'none';
+                container.style.display = 'none';
+            }
+
+            // Handle Price Formatting
+            if (price) {
+                const formattedPrice = '₹' + parseInt(price).toLocaleString('en-IN');
+                document.getElementById('line-price').innerText = formattedPrice;
+                document.getElementById('subtotal-display').innerText = formattedPrice;
+                document.getElementById('total-display').innerText = formattedPrice;
+            } else {
+                document.getElementById('line-price').innerText = '₹0';
+                document.getElementById('subtotal-display').innerText = '₹0';
+                document.getElementById('total-display').innerText = '₹0';
             }
         }
 
-        function processPayment() {
-            const imgUrl = document.getElementById('img-url').value;
-            if (!imgUrl) return;
+        function simulatePayment() {
+            const price = document.getElementById('item-price').value;
+            if (!price) {
+                alert('Please load an item and price first to complete checkout.');
+                return;
+            }
 
-            document.getElementById('pay-btn').style.display = 'none';
-            document.getElementById('spinner').style.display = 'block';
+            const overlay = document.getElementById('overlay');
+            const spinner = document.getElementById('spinner');
+            const processingText = document.getElementById('processing-text');
+            const success = document.getElementById('success');
 
-            // Simulate payment processing time
+            // Show processing screen
+            overlay.style.display = 'flex';
+            spinner.style.display = 'block';
+            processingText.style.display = 'block';
+            success.style.display = 'none';
+
+            // Simulate server delay
             setTimeout(() => {
-                document.getElementById('checkout-form').style.display = 'none';
+                spinner.style.display = 'none';
+                processingText.style.display = 'none';
                 
-                // Generate random Order ID
-                const orderId = 'NYK-' + Math.floor(10000000 + Math.random() * 90000000);
+                // Generate realistic order number
+                const orderPrefix = Math.random() > 0.5 ? 'ORD' : '#';
+                document.getElementById('order-num').innerText = orderPrefix + Math.floor(100000000 + Math.random() * 900000000);
                 
-                // Get current date formatted
-                const today = new Date();
-                const dateString = today.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-
-                document.getElementById('order-id').innerText = orderId;
-                document.getElementById('order-date').innerText = dateString;
-                document.getElementById('receipt-total').innerText = currentTotal;
-                
-                document.getElementById('success-state').style.display = 'block';
-            }, 2000); 
-        }
-
-        function resetForm() {
-            document.getElementById('success-state').style.display = 'none';
-            document.getElementById('checkout-form').style.display = 'block';
-            document.getElementById('pay-btn').style.display = 'block';
-            document.getElementById('spinner').style.display = 'none';
-            
-            document.getElementById('img-url').value = '';
-            document.getElementById('product-preview').style.display = 'none';
-            document.getElementById('price-row').style.display = 'none';
-            currentTotal = "₹0";
+                // Show success
+                success.style.display = 'block';
+            }, 2500); // 2.5 seconds feels like a real gateway authorization
         }
     </script>
 </body>
