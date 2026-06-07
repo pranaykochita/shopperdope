@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Dopamine Cart V2</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --box-bg: white;
+            --text-main: #333;
+            --text-sub: #7f8c8d;
+            --accent: #3498db;
+            --button-bg: #000;
+            --button-text: white;
+            --success: #27ae60;
+        }
+
+        /* THEME CLASSES */
+        body.theme-retail {
+            --bg-color: #eaeded;
+            --box-bg: white;
+            --text-main: #0f1111;
+            --accent: #f0c14b;
+            --button-bg: #ffd814;
+            --button-text: #0f1111;
+        }
+        body.theme-beauty {
+            --bg-color: #000;
+            --box-bg: #fff;
+            --text-main: #000;
+            --accent: #e74c3c;
+            --button-bg: #000;
+            --button-text: #fff;
+            --text-sub: #999;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s;
+        }
+        .container {
+            background: var(--box-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        h1 { margin-top: 0; }
+        
+        .theme-selector {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: var(--text-sub);
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+        
+        .brand-badge {
+            display: none;
+            background: var(--accent);
+            color: var(--button-text);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .price-tag {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--success);
+            margin: 20px 0;
+            display: none;
+        }
+        button {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.3s;
+        }
+        button:hover { opacity: 0.9; }
+        button:active { transform: scale(0.98); }
+
+        .spinner {
+            display: none;
+            margin: 20px auto;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .success-message { display: none; }
+        .success-message h2 { color: var(--success); }
+        .receipt {
+            background: #f8f9fa;
+            border: 1px dashed #bdc3c7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+            font-family: monospace;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="checkout-box">
+        
+        <div class="theme-selector">
+            <select id="theme-drop" onchange="changeTheme()">
+                <option value="default">Vibe: Minimalist</option>
+                <option value="theme-retail">Vibe: Big Box Store</option>
+                <option value="theme-beauty">Vibe: High-End Beauty</option>
+            </select>
+        </div>
+
+        <h1>🛒 Secure Checkout</h1>
+        <div class="brand-badge" id="brand-badge"></div>
+        
+        <div class="input-group">
+            <label for="item">Paste a product link, or type what you want:</label>
+            <input type="text" id="item" placeholder="https://www.example.com/product..." oninput="processInput()">
+        </div>
+
+        <div class="price-tag" id="price-display"></div>
+
+        <button id="buy-btn" onclick="startCheckout()">Place Order</button>
+        <div class="spinner" id="spinner"></div>
+
+        <div class="success-message" id="success">
+            <h2>🎉 Order Confirmed</h2>
+            <p>Your dopamine has been successfully deposited.</p>
+            <div class="receipt">
+                <strong>🧾 VIRTUAL RECEIPT</strong><br><br>
+                Brand/Site: <span id="receipt-brand">N/A</span><br>
+                Cost: <span id="receipt-cost"></span><br>
+                Actual Money Spent: $0.00<br>
+                <strong>Money Saved: <span id="receipt-saved"></span></strong>
+            </div>
+            <button style="margin-top: 20px; background-color: #bdc3c7; color: #333;" onclick="resetCart()">Go Again</button>
+        </div>
+    </div>
+
+    <script>
+        let currentFakePrice = "$0.00";
+        let detectedBrand = "Custom Entry";
+
+        function changeTheme() {
+            const theme = document.getElementById('theme-drop').value;
+            document.body.className = '';
+            if (theme !== 'default') {
+                document.body.classList.add(theme);
+            }
+        }
+
+        function processInput() {
+            const input = document.getElementById('item').value;
+            const priceDisplay = document.getElementById('price-display');
+            const brandBadge = document.getElementById('brand-badge');
+            
+            // Check if it's a URL
+            if (input.startsWith('http://') || input.startsWith('https://')) {
+                try {
+                    const url = new URL(input);
+                    // Extract domain name (e.g., www.sephora.com -> sephora)
+                    let domainParts = url.hostname.split('.');
+                    let brandName = domainParts.length > 2 ? domainParts[1] : domainParts[0];
+                    
+                    detectedBrand = brandName.charAt(0).toUpperCase() + brandName.slice(1);
+                    brandBadge.innerText = "Simulating: " + detectedBrand;
+                    brandBadge.style.display = 'inline-block';
+                } catch (e) {
+                    brandBadge.style.display = 'none';
+                    detectedBrand = "Custom Entry";
+                }
+            } else {
+                brandBadge.style.display = 'none';
+                detectedBrand = "Custom Entry";
+            }
+
+            if (input.length > 3) {
+                const randomPrice = (Math.random() * (250 - 15) + 15).toFixed(2);
+                currentFakePrice = `$${randomPrice}`;
+                priceDisplay.innerText = `Total: ${currentFakePrice}`;
+                priceDisplay.style.display = 'block';
+            } else {
+                priceDisplay.style.display = 'none';
+            }
+        }
+
+        function startCheckout() {
+            const item = document.getElementById('item').value;
+            if (!item) return;
+
+            document.querySelector('.input-group').style.display = 'none';
+            document.getElementById('price-display').style.display = 'none';
+            document.getElementById('buy-btn').style.display = 'none';
+            document.querySelector('.theme-selector').style.display = 'none';
+            document.getElementById('brand-badge').style.display = 'none';
+            document.getElementById('spinner').style.display = 'block';
+
+            setTimeout(() => {
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('receipt-brand').innerText = detectedBrand;
+                document.getElementById('receipt-cost').innerText = currentFakePrice;
+                document.getElementById('receipt-saved').innerText = currentFakePrice;
+                document.getElementById('success').style.display = 'block';
+            }, 1800); 
+        }
+
+        function resetCart() {
+            document.getElementById('success').style.display = 'none';
+            document.querySelector('.input-group').style.display = 'block';
+            document.getElementById('buy-btn').style.display = 'block';
+            document.querySelector('.theme-selector').style.display = 'block';
+            document.getElementById('item').value = '';
+            document.getElementById('price-display').style.display = 'none';
+            document.getElementById('brand-badge').style.display = 'none';
+            currentFakePrice = "$0.00";
+            detectedBrand = "Custom Entry";
+        }
+    </script>
+</body>
+</html>
